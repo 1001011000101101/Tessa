@@ -20,9 +20,11 @@
 
 
 **Карточка**:
+
 ![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/Card.png)
 
 **Представление**:
+
 ![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/View.png)
 
 В конструкторе карточек можно мышкой добавить контролы:
