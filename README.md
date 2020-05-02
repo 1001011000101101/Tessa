@@ -96,3 +96,4 @@
 
 Из коробки процесс создания карточки на текущий момент (02 мая 2020) выглядит так:
 
+![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/CreateCard.png)
