@@ -24,7 +24,7 @@
 
 ## **Карточка**:
 
-![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/Card.png)
+![Image of Yaktocat](https://github.com/1001011000101101/Tessa/images/blob/master/Card.png)
 
 ## **Представление**:
 
