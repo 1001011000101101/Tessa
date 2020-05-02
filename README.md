@@ -31,12 +31,14 @@
 ![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/View.png)
 
 В конструкторе карточек можно мышкой добавить контролы:
+
 ![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/CardControls.png)
 
 
 ## Схема данных:
 
 В системе есть wrapper для СУБД, через который можно создавать свои объекты БД:
+
 ![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/DatabaseGuiWrapper.png)
 
 
