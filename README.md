@@ -19,7 +19,7 @@
 ![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/Card.png)
 
 В конструкторе карточек можно мышкой добавить контролы:
-![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/CardContols.png)
+![Image of Yaktocat](https://github.com/1001011000101101/Tessa/blob/master/CardControls.png)
 
 
 
