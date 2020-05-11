@@ -89,3 +89,13 @@
 Необходимо дать пользователю возможность создавать проекты с представленной структурой папок (Разделы проекта). Причем при выборе каждой папки в области справа должен отображаться набор контролов, необходимый для имплементации бизнес-логики. 
  
 ![Project structure image](https://github.com/1001011000101101/Tessa/blob/master/images/ProjectTree.png)
+
+
+Добавим в админке в дерево объектов Представление "Проекты" и привяжем к нему расширение, входящее в стандартную поставку системы - "CreateCardExtension". Данное расширение добавляет одну кнопку в верхнюю панель Представления "Создать карточку".
+
+![CreateCardExtension image](https://github.com/1001011000101101/Tessa/blob/master/images/CreateCardExtension.png)
+
+Расширение в Visual Studio выглядит так:
+Данное расширение работает как в десктоп клиенте, так и в веб клиенте.
+
+![CreateCardExtensionVisualStudio image](https://github.com/1001011000101101/Tessa/blob/master/images/CreateCardExtensionVisualStudio.png)
