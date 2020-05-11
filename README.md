@@ -96,6 +96,8 @@
 ![CreateCardExtension image](https://github.com/1001011000101101/Tessa/blob/master/images/CreateCardExtension.png)
 
 Расширение в Visual Studio выглядит так:
-Данное расширение работает как в десктоп клиенте, так и в веб клиенте.
+Данное расширение работает как в десктоп-клиенте, так и в веб-клиенте.
 
 ![CreateCardExtensionVisualStudio image](https://github.com/1001011000101101/Tessa/blob/master/images/CreateCardExtensionVisualStudio.png)
+
+Далее необходимо перехватить событие сохранение карточки нового проекта и написать код добавления подчиненных Представлений в дерево объектов.
