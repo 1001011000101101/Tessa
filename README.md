@@ -129,8 +129,10 @@ public override void RegisterExtensions(IExtensionContainer extensionContainer)
         }
 ```
 
-Далее, дерево объектов храниться в бд (Workplaces): 
-
-![CreateCardExtensionVisualStudio image](https://github.com/1001011000101101/Tessa/blob/master/images/CreateCardExtensionVisualStudio.png)
-
+Далее, дерево объектов храниться в бд (Workplaces) в json (почти).
 В данном случае я решил редактировать это дерево напрямую. Это самый короткий путь, но отнюдь не самый правильный! Правильно, конечно же, делать это через API. Потому что если в следующих релизах работа с данным деревом подвергнется редизайну, придется переделывать.
+
+В результате имеем вот такую заготовку:
+
+
+
