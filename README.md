@@ -103,10 +103,28 @@
 Далее необходимо перехватить событие сохранение (и удаления) карточки нового проекта и написать код добавления подчиненных Представлений в дерево объектов.
 Сказано - сделано:
 
-```javascript
-function fancyAlert(arg) {
-  if(arg) {
-    $.facebox({div:'#foo'})
-  }
-}
+Регистрация перехватчиков на server side:
+
+```C#
+public override void RegisterExtensions(IExtensionContainer extensionContainer)
+        {
+            // Store
+            extensionContainer
+                .RegisterExtension<ICardStoreExtension, DmProjectNewCardStoreExtension>(x => x
+                    .WithOrder(ExtensionStage.AfterPlatform, 15)
+                    .WithUnity(this.UnityContainer)
+                    .WhenCardTypes(Helpers.DmProjectNewID)
+                    .WhenAnyStoreMethod())
+                ;
+
+
+            // Delete
+            extensionContainer
+                .RegisterExtension<ICardDeleteExtension, DmProjectNewCardDeleteExtension>(x => x
+                    .WithOrder(ExtensionStage.AfterPlatform, 15)
+                    .WithUnity(this.UnityContainer)
+                    .WhenCardTypes(Helpers.DmProjectNewID)
+                    .WhenAnyStoreMethod())
+                ;
+        }
 ```
