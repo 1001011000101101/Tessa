@@ -134,5 +134,6 @@ public override void RegisterExtensions(IExtensionContainer extensionContainer)
 
 В результате имеем вот такую заготовку:
 
+![DmProjectTree image](https://github.com/1001011000101101/Tessa/blob/master/images/DmProjectTree.JPG)
 
 
