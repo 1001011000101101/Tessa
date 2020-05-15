@@ -129,8 +129,21 @@ public override void RegisterExtensions(IExtensionContainer extensionContainer)
         }
 ```
 
-Далее, дерево объектов хранится в бд (Workplaces) в json (почти).
-В данном случае можно редактировать это дерево напрямую. Это самый короткий путь, но отнюдь не самый правильный! Правильно, конечно же, делать это через API. Потому что если в следующих релизах работа с данным деревом подвергнется редизайну, придется переделывать.
+Далее, дерево объектов хранится в бд (Workplaces) Представление в дереве выглядит так:
+
+```json
+#view(Alias:DmProjectFolder1, Caption:1.Графики авансирования, CompositionId:$$DmProjectFolder1CompositionId$$, IsNode:True, ParentCompositionId:$$DmProjectFolder1ParentCompositionId$$, RowCounterVisible:Hidden, EnableAutoWidth:True) {
+				#layout(Caption:1.Графики авансирования, CompositionId:$$DmProjectFolder1LayoutCompositionId$$) {
+					#content {
+						#data_view(Alias:DmProjectFolder1, CompositionId:$$DmProjectFolder1CompositionId$$) 
+					}
+				}
+				#extension(TypeName:Tessa.Extensions.Client.Views.DmProjectFolder1ViewExtension, Order:0) {}
+			}
+```
+
+В данном случае можно редактировать это дерево напрямую. Парсинг прост: разбиваем дерево на лексеммы ('#view', '(', ')', '{', '}') и считаем фигурные скобки.
+Это самый короткий путь, но отнюдь не самый правильный! Правильно, конечно же, делать это через API ([TreeItemFactory](https://mytessa.ru/docs/api/html/M_Tessa_UI_Views_Workplaces_Tree_TreeItemFactory__ctor.htm)). Потому что если в следующих релизах работа с данным деревом подвергнется редизайну, придется переделывать.
 
 В результате имеем вот такую заготовку:
 
