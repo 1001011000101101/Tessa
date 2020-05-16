@@ -78,6 +78,18 @@ db
 Если представить ситуацию, когда нужно рефакторить базу данных (нормализация или ренейминг), то, уверен, программисту прощу уволиться, чем рефакторить вот такие стринговые запросы. Обращаю внимание: bltoolkit находится в состоянии suspended.
 
 Выход здесть простой: подключить нормальную ORM, например EntityFramework (database first). Что я в итоге и сделал.
+Для этого создал отдельный проект "DAL" и в нем произвел такие манипуляции:
+
+необходимые пакеты:
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Tools
+
+Далее In Visual Studio, select menu Tools -> NuGet Package Manger -> Package Manger Console and run the following command:
+
+```
+PM> Scaffold-DbContext "Server=(local);Database=tessa;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+```
 
 
 
