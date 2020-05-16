@@ -78,9 +78,10 @@ db
 Если представить ситуацию, когда нужно рефакторить базу данных (нормализация или ренейминг), то, уверен, программисту прощу уволиться, чем рефакторить вот такие стринговые запросы. Обращаю внимание: bltoolkit находится в состоянии suspended.
 
 Выход здесть простой: подключить живую ORM, например EntityFramework или Fluent NHibernate. 
-Для этого создал отдельный проект "DAL" и в нем произвел такие манипуляции:
+На мой взгляд предпочтительнее EntityFramework так как не нужно руками писать маппинги. А для того, чтобы избежать проблем с зависимостями, как с текущей версией TESSA, так и с будущими, можно развернуть netcore webapi.
 
 необходимые пакеты:
+
 Microsoft.EntityFrameworkCore
 Microsoft.EntityFrameworkCore.SqlServer
 Microsoft.EntityFrameworkCore.Tools
@@ -91,6 +92,7 @@ Microsoft.EntityFrameworkCore.Tools
 PM> Scaffold-DbContext "Server=(local);Database=tessa;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
 ```
 
+- и webapi готов!
 
 
 ## Критика
