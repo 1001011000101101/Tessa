@@ -117,7 +117,7 @@ await using (this.dbScope.Create())
 
 ```C#
 
-var dmMasters = db.RoleUsers.Where(x => x.TypeId == 0 && x.Id == DmConstants.TessaDmMastersRoleId)
+var dmMasters = db.RoleUsers.Where(x => x.TypeId == DmConstants.StaticRoleTypeId && x.Id == DmConstants.TessaDmMastersRoleId)
                 .Select(x => new DmMaster()
             { 
                 Id = x.UserId, 
