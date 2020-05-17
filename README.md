@@ -78,6 +78,59 @@ db
 
 Если представить ситуацию, когда нужно рефакторить базу данных (нормализация или ренейминг), то, уверен, программисту прощу уволиться, чем рефакторить вот такие стринговые запросы. Обращаю внимание: bltoolkit находится в состоянии suspended.
 
+Остановлюсь на этом ужасе немного подробнее. 
+
+Вот пример запроса на получение данных, способом, который предлагается разработчиками TESSA:
+
+```C#
+await using (this.dbScope.Create())
+            {
+                var db = dbScope.Db;
+
+                var comand =
+                     db.SetCommand(dbScope.BuilderFactory
+                        .Select().C(null, "UserID", "UserName")
+                        .From("RoleUsers")
+                        .InnerJoin("Roles").On().C("RoleUsers", "ID").Equals().C("Roles", "ID")
+                        .Where().C("RoleUsers", "TypeID").Equals().P("TypeID")
+                        .And().C("Roles", "Name").Equals().P("RoleName")
+                        .Build(),
+                        db.Parameter("TypeID", 0, LinqToDB.DataType.Int32), db.Parameter("RoleName", "Мастера"))
+                    .LogCommand();
+
+                using var reader = await comand.ExecuteReaderAsync(cancellationToken);
+
+                if (reader.HasRows)
+                {
+                    while (await reader.ReadAsync(cancellationToken))
+                    {
+                        string masterName = reader.GetValue<string>(1);
+                        Guid masterId = reader.GetValue<Guid>(0);
+
+                        result.Add(new DmMaster(masterId, masterName));
+                    }
+                }
+            }
+```
+
+А вот запрос на получение точно таких же данных, но уже с ORM:
+
+```C#
+
+var dmMasters = db.RoleUsers.Where(x => x.TypeId == 0 && x.Id == DmConstants.TessaDmMastersRoleId)
+                .Select(x => new DmMaster()
+            { 
+                Id = x.UserId, 
+                Name = x.UserName 
+            }).ToList();
+
+```
+
+
+Тут мне могут возразить, что первый запрос будет работать быстрее. Возможно, но это не значит, что нужно писать на raw SQL. 
+Эти времена давно прошли. Где-то это может быть уместно, но не во всем же проекте.
+
+
 Мы же пойдем своим, типобезопасным путем: подключим живую ORM, например EntityFramework или Fluent NHibernate. 
 На мой взгляд предпочтительнее EntityFramework так как не нужно руками писать маппинги, создание всех POCO классов на основе схемы БД в EF занимает ровно одну строку (Scaffold-DbContext). А для того, чтобы избежать проблем с зависимостями (разные версии одной и той же библиотеки), как с текущей версией TESSA, так и с будущими, можно развернуть netcore webapi. Получаем микросервисную архитектуру, data access layer будет микросервисом, можно еще выделить DTO в отдельный проект. Абстрагируемся не только от базы данных, но и от ORM) Наивысшая степень абстракции).
 
