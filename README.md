@@ -227,7 +227,11 @@ CardStoreResponse cardStoreResponse = cardRepository?.StoreAsync(cardStoreReques
 var context = await this.uiHost.OpenCardAsync(cardID: cardNewResponse.Card.ID);
 ```
 
-и теперь мы имеем возможность работать с данными внутри обработчиков. 
+и теперь мы имеем возможность работать с данными внутри обработчиков:
+
+```C#
+string name = card.Sections[DmDynamicNames.SectionDmProjects].Fields.Get<string>(DmDynamicNames.Name);
+```
 
 
 ## Критика
