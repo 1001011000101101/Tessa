@@ -1,6 +1,6 @@
 # СЭД Tessa
 
-Ниже собрана полезная информация по системе TESSA 3.4
+Ниже происходит препарирование системы TESSA 3.4, основанное на личном опыте внедрения.
 
 1. [Общее описание системы](#общее-описание-системы)
    * [Карточка](#карточка)
@@ -9,6 +9,7 @@
    * [Дерево объектов](#дерево-объектов)
    * [Работа с БД](#работа-с-бд)
    * [Отчеты](#отчеты)
+   * [Создание карточки](#создание-карточки)
 2. [Критика](#критика)
    * [TypeSafety](#type-safety)
 3. [Описание проекта автоматизации проектного управления в строительной отрасли](#описание-проекта-автоматизации-проектного-управления-в-строительной-отрасли)
@@ -159,6 +160,74 @@ PM> Scaffold-DbContext "Server=(local);Database=tessa;Trusted_Connection=True;" 
 webBrowser.Navigate("http://local-report-tooling");
 
 ```
+
+
+## Создание карточки:
+
+Новую карточку можно создать достаточо просто:
+
+В модальном окне:
+```C#
+var createCardContext = await advancedCardDialogManager.CreateCardAsync(cardTypeID: cardTypeId);
+```
+
+или на вкладке:
+
+```C#
+var createCardContext = await uiHost.CreateCardAsync(cardTypeID: cardTypeId);
+```
+
+Подписаться на события карточки, например, в файловый контрол загрузили новый файл, можно реализовав интерфейс ICardUIExtension.
+Делается примерно так: в методе инициализации ICardUIExtension.Initialized() получаем модель карточки ICardModel, из нее достаем модель контрола IControlViewModel по его системному имени (алиасу), который задан во время проектирования:
+
+```C#
+cardModel.Controls.TryGet(Helpers.ControlAlias, out fileControlViewModel)
+```
+ Далее, делаем кастинг:
+ 
+ ```C#
+ var fileControl =  ((FileListViewModel)fileControlViewModel).FileControl;
+ ```
+
+Теперь можно подписываться на события:
+
+```C#
+fileControl.ContainerFileAdding += FileControl_ContainerFileAdding;
+```
+
+Здесь нужно заметить, что простого и интуитивно понятного способа передать что-то в методы ICardUIExtension нет. Например, если мы захотим передать caption текущего узла дерева (ITreeItem, или более частный случай IViewTreeItem - представление) в рабочем месте, то придется вместо простого создания карточки:
+
+```C#
+var createCardContext = await advancedCardDialogManager.CreateCardAsync(cardTypeID: cardTypeId);
+```
+
+сначала создать карточку вручную:
+
+```C#
+CardNewRequest cardNewRequest = new CardNewRequest() { CardTypeID = cardTypeId };
+CardNewResponse cardNewResponse = cardRepository?.NewAsync(cardNewRequest).Result;
+```
+
+заполнить поля карточки:
+
+```C#
+cardNewResponse.Card.ID = Guid.NewGuid();
+cardNewResponse.Card.Sections[DmDynamicNames.SectionDmProjects].Fields[DmDynamicNames.ViewCompositionId] = viewCompositionId;
+```
+
+сохранить карточку:
+
+```C#
+CardStoreRequest cardStoreRequest = new CardStoreRequest() { Card = cardNewResponse.Card };
+CardStoreResponse cardStoreResponse = cardRepository?.StoreAsync(cardStoreRequest).Result;
+```
+
+и открыть ее:
+```C#
+var context = await this.uiHost.OpenCardAsync(cardID: cardNewResponse.Card.ID);
+```
+
+и теперь мы имеем возможность работать с данными внутри обработчиков. 
 
 
 ## Критика
