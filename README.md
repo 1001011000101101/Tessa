@@ -13,8 +13,6 @@
    * [Публикация](#публикация)
 2. [Критика](#критика)
    * [TypeSafety](#type-safety)
-3. [Описание проекта автоматизации проектного управления в строительной отрасли](#описание-проекта-автоматизации-проектного-управления-в-строительной-отрасли)
-   * [Задача №1: Структура проекта](#задача-1-структура-проекта)
 
 ## Общее описание системы
 
@@ -274,73 +272,5 @@ string name = card.Sections[DmDynamicNames.SectionDmProjects].Fields.Get<string>
 
 ![TypeSafety issue](https://github.com/1001011000101101/Tessa/blob/master/images/TypeSafety.png)
 
-
-
-## Описание проекта автоматизации проектного управления в строительной отрасли
-
-### Задача №1: Структура проекта
-
-Необходимо дать пользователю возможность создавать проекты с представленной структурой папок (Разделы проекта). Причем при выборе каждой папки в области справа должен отображаться набор контролов, необходимый для имплементации бизнес-логики. 
- 
-![Project structure image](https://github.com/1001011000101101/Tessa/blob/master/images/ProjectTree.png)
-
-
-Добавим в админке в дерево объектов Представление "Проекты" и привяжем к нему расширение, входящее в стандартную поставку системы - "CreateCardExtension". Данное расширение добавляет одну кнопку в верхнюю панель Представления "Создать карточку".
-
-![CreateCardExtension image](https://github.com/1001011000101101/Tessa/blob/master/images/CreateCardExtension.png)
-
-Расширение в Visual Studio выглядит так:
-Данное расширение работает как в десктоп-клиенте, так и в веб-клиенте.
-
-![CreateCardExtensionVisualStudio image](https://github.com/1001011000101101/Tessa/blob/master/images/CreateCardExtensionVisualStudio.png)
-
-Далее необходимо перехватить событие сохранение (и удаления) карточки нового проекта и написать код добавления подчиненных Представлений в дерево объектов.
-Сказано - сделано:
-
-Регистрация перехватчиков на server-side:
-
-```C#
-public override void RegisterExtensions(IExtensionContainer extensionContainer)
-        {
-            // Store
-            extensionContainer
-                .RegisterExtension<ICardStoreExtension, DmProjectNewCardStoreExtension>(x => x
-                    .WithOrder(ExtensionStage.AfterPlatform, 15)
-                    .WithUnity(this.UnityContainer)
-                    .WhenCardTypes(Helpers.DmProjectNewID)
-                    .WhenAnyStoreMethod())
-                ;
-
-
-            // Delete
-            extensionContainer
-                .RegisterExtension<ICardDeleteExtension, DmProjectNewCardDeleteExtension>(x => x
-                    .WithOrder(ExtensionStage.AfterPlatform, 15)
-                    .WithUnity(this.UnityContainer)
-                    .WhenCardTypes(Helpers.DmProjectNewID)
-                    .WhenAnyStoreMethod())
-                ;
-        }
-```
-
-Далее, дерево объектов хранится в бд (Workplaces) Представление в дереве выглядит так:
-
-```json
-#view(Alias:DmProjectFolder1, Caption:1.Графики авансирования, CompositionId:$$DmProjectFolder1CompositionId$$, IsNode:True, ParentCompositionId:$$DmProjectFolder1ParentCompositionId$$, RowCounterVisible:Hidden, EnableAutoWidth:True) {
-				#layout(Caption:1.Графики авансирования, CompositionId:$$DmProjectFolder1LayoutCompositionId$$) {
-					#content {
-						#data_view(Alias:DmProjectFolder1, CompositionId:$$DmProjectFolder1CompositionId$$) 
-					}
-				}
-				#extension(TypeName:Tessa.Extensions.Client.Views.DmProjectFolder1ViewExtension, Order:0) {}
-			}
-```
-
-В данном случае можно редактировать это дерево напрямую. Парсинг прост: разбиваем дерево на лексеммы ('#view', '(', ')', '{', '}') и считаем фигурные скобки.
-Это самый короткий путь, но отнюдь не самый правильный! Правильно, конечно же, делать это через API ([TreeItemFactory](https://mytessa.ru/docs/api/html/M_Tessa_UI_Views_Workplaces_Tree_TreeItemFactory__ctor.htm)). Потому что если в следующих релизах работа с данным деревом подвергнется редизайну, придется переделывать.
-
-В результате имеем вот такую заготовку:
-
-![DmProjectTree image](https://github.com/1001011000101101/Tessa/blob/master/images/DmProjectTree.JPG)
 
 
